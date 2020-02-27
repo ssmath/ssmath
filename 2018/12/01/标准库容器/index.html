@@ -1,0 +1,1606 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN,en,zh-HK,zh-TW,default">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="标准库容器, Shan San">
+    <meta name="description" content="
+
+
+标准库容器是模板类型，用来保存给定类型的对象。一个容器就是一些特定类型对象的集合。
+
+顺序容器
+顺序容器我们提供了控制元素存储和访问顺序的能力。这种顺序不依赖于元素的值，而是与元素加入容器时的位置对应。
+一般来说，每个容器都定义在一个">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>标准库容器 | Shan San</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <script src="/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Shan San</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Shan San</div>
+        <div class="logo-desc">
+            
+            每天都要开开心心
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/yeshan333" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/yeshan333" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">标准库容器</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/CPP/">
+                                <span class="chip bg-color">CPP</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/CPP/" class="post-category">
+                                CPP
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2018-12-01
+                </div>
+                
+
+                
+
+                
+
+                
+				
+                
+            </div>
+            
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p><img src="https://i.imgur.com/T0WbcwD.png" alt=""></p>
+<a id="more"></a>
+<blockquote>
+<p>标准库容器是模板类型，用来保存给定类型的对象。一个容器就是一些特定类型对象的集合。</p>
+</blockquote>
+<h1 id="顺序容器"><a href="#顺序容器" class="headerlink" title="顺序容器"></a>顺序容器</h1><ul>
+<li>顺序容器我们提供了控制元素存储和访问顺序的能力。这种顺序不依赖于元素的值，而是与元素加入容器时的位置对应。</li>
+<li>一般来说，每个容器都定义在一个都文件中</li>
+<li>顺序元素几乎可以保存任意类型的元素</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">顺序容器类型</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">vector</td>
+<td align="center">可变大小数组。支持快速随机访问。在尾部之外的位置插入或删除元素可能很慢</td>
+</tr>
+<tr>
+<td align="center">array</td>
+<td align="center">固定大小数组，支持快速随机访问，不能添加或删除元素</td>
+</tr>
+<tr>
+<td align="center">string</td>
+<td align="center">与vector相似的容器，但专门用于保存字符。随机访问块。在尾部插入或删除快</td>
+</tr>
+<tr>
+<td align="center">deque</td>
+<td align="center">双端队列。支持快速随机访问。在头尾位置插入或删除速度很快</td>
+</tr>
+<tr>
+<td align="center">list</td>
+<td align="center">双向链表。只支持双向顺序访问，在list中任何位置进行插入或删除操作的速度都很快</td>
+</tr>
+<tr>
+<td align="center">forward_list</td>
+<td align="center">单向链表。只支持单向顺序访问，在链表的任何位置进行插入或删除操作的速度都很快</td>
+</tr>
+</tbody></table>
+<p>forward_list、array是新C++标准增加的类型<br>与内置数组相比，array是一种更安全、更容易使用的数组类型。<br>array对象的大小不是固定的，因此，他支持插入和删除元素以及改变容器大小的操作</p>
+<h2 id="容器类型成员"><a href="#容器类型成员" class="headerlink" title="容器类型成员"></a>容器类型成员</h2><p>每个容器都定义了多个类型</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型别名</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">iterator</td>
+<td align="center">容器的迭代器类型成员</td>
+</tr>
+<tr>
+<td align="center">const_iterator</td>
+<td align="center">可以读取元素，但不能修改元素的迭代器类型</td>
+</tr>
+<tr>
+<td align="center">size_type</td>
+<td align="center">无符号整数类型，足够保存此种容器类型最大可能容器的大小</td>
+</tr>
+<tr>
+<td align="center">differrnce_type</td>
+<td align="center">带符号整数类型，足够保存两个迭代器之间的距离</td>
+</tr>
+<tr>
+<td align="center">value_type</td>
+<td align="center">元素类型</td>
+</tr>
+<tr>
+<td align="center">reference_type</td>
+<td align="center">元素左值类型，与value_type&amp;含义相同</td>
+</tr>
+<tr>
+<td align="center">const_reference</td>
+<td align="center">元素的const左值类型，(即const value_type&amp;)</td>
+</tr>
+</tbody></table>
+<p>** 通过类型别名，我们可以在不了解容器中元素类型的情况下使用它 **</p>
+<p>为了使用这些类型，我们必须显示的使用其类型名<br>    vector<int>::iterator iter;//iter是通过vector<int>定义的迭代器类型</p>
+<blockquote>
+<p>容器的begin成员和end成员<br>begin成员生成一个指向容器中第一个元素位置的迭代器<br>end成员生成指向尾元素之后的位置的迭代器</p>
+</blockquote>
+<h2 id="容器定义和初始化"><a href="#容器定义和初始化" class="headerlink" title="容器定义和初始化"></a>容器定义和初始化</h2><ul>
+<li>每个容器都定义了一个默认的构造函数。容器的默认的构造函数都会创建一个指定类型的空容器，他们都可以接受指定容器大小和元素初始值的参数</li>
+<li>由于array是固定大小的数组。定义一个array时，除了制定元素类型外，还要指定容器的大小</li>
+<li>创建一个容器为另一个容器的拷贝时，两个容器的类型以及元素的类型必须相同</li>
+<li>当传递迭代器参数来拷贝一个范围时，不要求容器的类型必须相同，且新容器和原容器的元素类型也可以不同，只要能将要拷贝的元素的类型转换为要初始化的容器的元素类型即可</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">定义&amp;初始化方式</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">C a</td>
+<td align="center">默认构造函数，如果C是一个array，则a中元素按默认方式初始化，否则a为空</td>
+</tr>
+<tr>
+<td align="center">C a(b)<br>C a=b</td>
+<td align="center">a初始化为b的拷贝。<strong>a和b必须是相同的类型(它们必须是相同的容器类型，且保存的是相同的元素类型)</strong>，对于array我们还要定义它的大小</td>
+</tr>
+<tr>
+<td align="center">C a{b,c,d,e,f,…}<br>C a={b,c,d,e,f,…}</td>
+<td align="center">a初始化为初始化列表中元素的拷贝。列表中的元素类型必须与a的元素类型相容。对于array来说，列表元素的数目必须小于或等于array的大小，任何遗漏的元素直接进行值初始化</td>
+</tr>
+<tr>
+<td align="center">C a(b_iterator,c_iterator)</td>
+<td align="center">a初始化为迭代器b_iterator和c_iterator指定范围中元素的拷贝，范围中元素的类型必须与a的元素类型相容</td>
+</tr>
+<tr>
+<td align="center">C a(n)</td>
+<td align="center">a包含n个元素，这些元素进行了值初始化，此构造函数explicit的，string和array不适用</td>
+</tr>
+<tr>
+<td align="center">C a(n,value)</td>
+<td align="center">a包含n个初始化为值value的元素</td>
+</tr>
+</tbody></table>
+<pre><code class="c++">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;list&gt;
+#include&lt;forward_list&gt;
+using namespace std;
+
+int main()
+{
+    list&lt;string&gt; svec(10,&quot;shan&quot;);
+
+    for(auto i:svec)
+    {
+        cout&lt;&lt;i&lt;&lt;endl;
+    }
+
+    //vector&lt;string&gt; vec = svec;//#错误，容器类型不匹配  
+
+    forward_list&lt;string&gt; fvec(svec.begin(),svec.end());//使用迭代器范围进行拷贝初始化 
+
+    for(auto temp:fvec)
+    {
+        cout&lt;&lt;temp&lt;&lt;endl;
+    } 
+
+
+    return 0;
+} </code></pre>
+<h3 id="标准库array的使用"><a href="#标准库array的使用" class="headerlink" title="标准库array的使用"></a>标准库array的使用</h3><ul>
+<li>定义一个array时，我们要指定元素的类型，还要指定容器的大小</li>
+<li>由于大小是array类型的一部分，array不支持不同容器类型的构造函数</li>
+<li>对array进行列表初始化的时候，初始值的数目必须等于或小于array的大小</li>
+<li>array要求初始值的类型必须要与创建的容器类型相一致</li>
+<li>虽然我们不能对内置的数组进行拷贝或对象赋值操作，但是array并无此限制</li>
+</ul>
+<pre><code class="c++">#include&lt;iostream&gt;
+#include&lt;array&gt; 
+using namespace std;
+
+int main()
+{
+    array&lt;int ,10&gt; num_1;//定义了一个保存10个int的数组 
+    for(auto i:num_1)
+        cout&lt;&lt;i&lt;&lt;&quot; &quot;;
+
+    cout&lt;&lt;endl;
+
+    array&lt;int ,10&gt; num_2={1,2,3,4,5,6,7,8,9,10};
+    for(auto i:num_2)
+        cout&lt;&lt;i&lt;&lt;&quot; &quot;;
+
+    cout&lt;&lt;endl;    
+    int d[5]={3,6,9,12,15};
+    //int b[5]=d; 这是错误的，内置数组不支持拷贝和赋值
+
+    array&lt;int ,6&gt; try_1={4,5,6,7,8,9};
+    array&lt;int ,6&gt; try_2=try_1;
+    for(auto temp:try_2)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;; 
+
+    return 0;
+} </code></pre>
+<p><img src="https://i.imgur.com/IiUtXSK.png" alt=""></p>
+<h2 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a>容器操作</h2><h3 id="swap和assign"><a href="#swap和assign" class="headerlink" title="swap和assign"></a>swap和assign</h3><ul>
+<li><strong>a.swap(b)</strong>:用于交换两个容器中的元素，两个容器必须具有相同的类型</li>
+<li><strong>swap(a,b)</strong>:用于交换两个相同类型的容器中的元素</li>
+<li><strong>a.assign(1_iterator,2_iterator)</strong>:将a中的元素替换为迭代器1_iterator和2_iterator范围中的元素，迭代器不能指向a中的元素</li>
+<li><strong>a.assign(value_list)</strong>: 将a中的元素初始化为初始化列表value_list中的元素</li>
+<li><strong>a.assign(n,value)</strong>:将a中的元素替换为n个值为value的元素</li>
+</ul>
+<pre><code class="c++">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+using namespace std;
+
+int main()
+{
+    vector&lt;int&gt; a={1,2,3,4,5,6};
+    vector&lt;int&gt; b;
+    b.assign({6,7,8,9,10,11});
+    cout&lt;&lt;endl; 
+    for(auto temp:b)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;
+    cout&lt;&lt;endl;
+    b.assign(a.begin(),a.end()); 
+    for(auto temp:b)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;
+
+    cout&lt;&lt;endl;
+
+    /*
+    * swap操作交换两个相同类型容器的内容
+    * assing操作用参数所指定的元素(即拷贝)替换左边容器中的所有元素。
+    * assign允许我们从不同但相容的类型赋值，或者从一个容器的子序列赋值
+    * 除了string外，指向容器的迭代器、引用和指针在swap操作后都不会失效 
+    */
+
+
+    vector&lt;int&gt; temp={11,22,33,44,55,66,77,88};
+    b.swap(temp);
+    cout&lt;&lt;&quot;temp: &quot;;
+    cout&lt;&lt;&quot;size-&quot;&lt;&lt;temp.size()&lt;&lt;&quot; &quot;;
+    for(auto i=temp.begin();i != temp.end();i++)
+        cout&lt;&lt;*i&lt;&lt;&quot; &quot;;
+    cout&lt;&lt;endl;
+
+    cout&lt;&lt;endl;
+    cout&lt;&lt;&quot;b: &quot;;
+    cout&lt;&lt;&quot;size-&quot;&lt;&lt;b.size()&lt;&lt;&quot; &quot;;
+    for(auto j=b.begin();j != b.end();j++)
+        cout&lt;&lt;*j&lt;&lt;&quot; &quot;;
+    return 0;    
+} </code></pre>
+<p><img src="https://i.imgur.com/DltXOoC.png" alt=""></p>
+<h3 id="向容器中添加元素（array不支持这些操作）"><a href="#向容器中添加元素（array不支持这些操作）" class="headerlink" title="向容器中添加元素（array不支持这些操作）"></a>向容器中添加元素（array不支持这些操作）</h3><table>
+<thead>
+<tr>
+<th align="center">&ensp;</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">C.push_back(t)<br>C.emplace_back(args)</td>
+<td align="center">在C的尾部创建一个值为t或由args创建的元素。返回void类型</td>
+</tr>
+<tr>
+<td align="center">C.push_front(t)<br>C.emplace_front(args)</td>
+<td align="center">在C的头部创建一个值为t或由args创建的元素，返回指向新添加的元素的迭代器</td>
+</tr>
+<tr>
+<td align="center">C.insert(p_iterator,t)<br>C.emplace(p_iterator,args)</td>
+<td align="center">在迭代器p_iterator之前插入一个值为t或由args创建的元素，返回指向新添加的元素的迭代器</td>
+</tr>
+<tr>
+<td align="center">C.insert(p_iterator,n,t)</td>
+<td align="center">在迭代器p_iterator指向的元素之前插入n个值为t的元素，返回指向新插入的第一个元素的迭代器，若n为0，则返回p_iterator</td>
+</tr>
+<tr>
+<td align="center">C.insert(p_iterator,a_iterator,b_iterator)</td>
+<td align="center">将迭代器a_iterator和b_iterator指定的范围内的元素插入到迭代器p_iterator指向的元素之前，迭代器范围不能指向C中的元素。返回指向第一个新添加的元素的迭代器，若范围为空，则返回p_iterator</td>
+</tr>
+<tr>
+<td align="center">C.insert(p_iterator,li)</td>
+<td align="center">将由花括号括起来的元素值列表li插入待迭代器p_iterator所指的元素之前。返回新添加的第一个元素的迭代器，若列表为空，则返回p_iterator</td>
+</tr>
+</tbody></table>
+<ul>
+<li>向一个vector、string或deque中插入元素会使所有指向容器的迭代器、引用和指针失效</li>
+<li>记住，insert函数将元素插入到迭代器所指定的位置之前</li>
+<li>当我们用一个对象来初始化容器时，或将一个对象插入到容器中的时，实际上放入到容器中的是对象的值的拷贝，而不是对象本身</li>
+<li>vector、list、deque、string都支持insert成员，forward_list提供了特殊版本的insert成员</li>
+</ul>
+<pre><code class="c++">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;list&gt;
+using namespace std;
+
+void operated_1()
+{
+    vector&lt;string&gt; ss{&quot;shansan&quot;,&quot;wocao&quot;,&quot;yeshan&quot;};
+    vector&lt;string&gt; v;
+    for(auto i:ss)
+        v.push_back(i);
+    for(auto temp:v)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;    
+}
+
+void operated_2()
+{
+    list&lt;int&gt; ls;
+    for(int num=3;num&gt;=0;num--)
+        ls.push_front(num);
+    for(int i=5;i&lt;8;i++)
+        ls.push_back(i);
+    for(auto i=ls.begin();i != ls.end(); i++)
+       cout&lt;&lt;*i&lt;&lt;&quot; &quot;;
+}
+
+void operated_3()
+{
+    vector&lt;int&gt; v_1{1,2,3,4,5};
+    vector&lt;int&gt; v_2{6,7,8,9,10};
+
+    v_1.insert(v_1.begin(),66);//在迭代器v_1.begin()所指的元素之前插入一个元素66 
+    for(auto temp: v_1)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;
+    cout&lt;&lt;endl;
+
+    v_1.insert(v_1.begin(),v_2.begin(),v_2.end());
+    //在迭代器v_1.begin()所指的元素之前，插入迭代器v_2.begin()到v_2.end()指顶范围内的元素 
+    for(auto temp:v_1)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;
+
+}
+
+int main()
+{
+    operated_1();
+    cout&lt;&lt;endl;
+    operated_2();
+    cout&lt;&lt;endl;
+    operated_3();
+
+    return 0;
+} </code></pre>
+<p><img src="https://s1.ax1x.com/2018/11/30/Fm5CWt.md.png" alt="Fm5CWt.md.png"></p>
+<h4 id="emplace操作"><a href="#emplace操作" class="headerlink" title="emplace操作"></a>emplace操作</h4><blockquote>
+<p>当调用一个insert或push成员函数时，我们将元素类型的对象传递给它们，这些对象被拷贝到容器中<br>当调用一个emplace函数时，则是将参数传递给元素类型的构造函数。emplace成员直接使用这些参数在容器管理的内存空间中直接构造函数</p>
+</blockquote>
+<p><font color="red">emplace函数在容器中直接构造函数。传递给emplace函数的参数必须与元素类型的构造函数相匹配</font></p>
+<pre><code class="c++">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+using namespace std;
+
+class student{
+    public:
+        student(string str,int a):name(str),age(a){}
+        void print_1()
+        {
+            cout&lt;&lt;&quot;name: &quot;&lt;&lt;this-&gt;name&lt;&lt;&quot;,&quot;&lt;&lt;&quot;Age: &quot;&lt;&lt;this-&gt;age&lt;&lt;endl;
+        }
+    private:
+        int age;
+        string name;
+};
+
+int main()
+{
+    vector&lt;student&gt; s;//我们将student存到了vector中
+
+    s.emplace_back(&quot;shansan&quot;,18);//使用student对象的构造函数 
+    auto temp=s.begin();
+    (*temp).print_1();
+    cout&lt;&lt;endl;
+
+    //s.push_back(&quot;try&quot;,66);//error：没有接受两个参数的push_back版本 
+
+    s.push_back(student(&quot;try&quot;,66));//创建一个临时的student对象传递给push_back 
+    for(auto i:s)
+        i.print_1(); 
+
+    return 0;
+
+}</code></pre>
+<p><img src="https://s1.ax1x.com/2018/11/30/Fmo5dg.png" alt="Fmo5dg.png"></p>
+<h3 id="访问容器中的元素"><a href="#访问容器中的元素" class="headerlink" title="访问容器中的元素"></a>访问容器中的元素</h3><table>
+<thead>
+<tr>
+<th align="center">访问操作</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">c.back()</td>
+<td align="center">返回c中尾元素的引用。若c为空，函数行为未定义</td>
+</tr>
+<tr>
+<td align="center">c.front()</td>
+<td align="center">返回c中首元素的引用。若c为空，函数行为未定义</td>
+</tr>
+<tr>
+<td align="center">c[n]</td>
+<td align="center">返回c中下标为n的元素的引用，n是一个无符号整数。若n&gt;=c.size()，则函数行为未定义</td>
+</tr>
+<tr>
+<td align="center">c.at(n)</td>
+<td align="center">返回下标为n的元素的引用。如果下标越界，则抛出一个out_of_range异常</td>
+</tr>
+</tbody></table>
+<pre><code class="c++">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+using namespace std;
+
+int main()
+{
+    /*
+    * 不要对一个空的容器使用front和back操作
+    * at和下标操作只适用于string、vector、deque和array
+    * back不适用于forward_list 
+    */
+    vector&lt;int&gt; v{1,6};
+    int a = v.front();
+    a=33;
+    cout&lt;&lt;&quot;v[0]=&quot;&lt;&lt;v[0]&lt;&lt;endl;
+
+    int &amp;refer = v.front();
+    refer =33;//改变了v[0]的值 
+    cout&lt;&lt;&quot;v[0]=&quot;&lt;&lt;v[0];
+    return 0;
+} </code></pre>
+<p>由于访问成员函数的返回值是引用类型，如果是非const的，我们可以使用它来改变元素的值</p>
+<h3 id="删除容器中的元素"><a href="#删除容器中的元素" class="headerlink" title="删除容器中的元素"></a>删除容器中的元素</h3><table>
+<thead>
+<tr>
+<th align="center">删除操纵</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">c.pop_back()</td>
+<td align="center">删除c的尾元素，如果c是空的，则函数行为未定义。函数返回void</td>
+</tr>
+<tr>
+<td align="center">c.pop_front()</td>
+<td align="center">删除c的首元素，如果c是空的，则函数行为未定义。函数返回void</td>
+</tr>
+<tr>
+<td align="center">c.erase(p_iterator)</td>
+<td align="center">删除迭代器p_iterator所指定的元素，返回一个指向被删除的元素之后元素的迭代器，若p_iterator指向尾元素，则返回尾后迭代器，若p_iterator是尾后迭代器，则函数行为未定义</td>
+</tr>
+<tr>
+<td align="center">c.erase(a_iterator,b_iterator)</td>
+<td align="center">删除迭代器a_iterator和b_iterator所指定范围内的元素，返回一个指向最后一个被删元素之后元素的迭代器，若b_iterator本身就是尾后迭代器，则返回尾后迭代器</td>
+</tr>
+<tr>
+<td align="center">c.clear()</td>
+<td align="center">删除c中所有的元素</td>
+</tr>
+</tbody></table>
+<p><strong>删除deque中除首尾位置之外的任何元素都会使迭代器、引用和指针失效。指向vector或string中删除点位置之后的迭代器、引用和指针都会失效</strong></p>
+<pre><code class="c++">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;list&gt;
+using namespace std;
+
+int main()
+{
+    vector&lt;string&gt; str{&quot;shansan&quot;,&quot;wocao&quot;,&quot;555&quot;};
+    for(auto temp:str)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;
+    str.pop_back();
+    cout&lt;&lt;endl;
+    for(auto temp:str)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;
+    cout&lt;&lt;endl;
+    str.erase(str.begin(),str.end());
+    for(auto temp:str)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;
+
+    list&lt;int&gt; lst={0,1,2,3,4,5,6,7,8,9,10};
+    auto it = lst.begin();
+    while(it != lst.end())
+    {
+        if(*it%2) 
+            it = lst.erase(it);//删除奇数元素,返回指向被删除元素的下一个元素的迭代器 
+        else
+            it++;
+    }
+    for(auto temp:lst)
+        cout&lt;&lt;temp&lt;&lt;&quot; &quot;;
+    return 0; 
+} </code></pre>
+<p><img src="https://i.imgur.com/QmwV39Y.png" alt=""></p>
+<h3 id="改变容器大小"><a href="#改变容器大小" class="headerlink" title="改变容器大小"></a>改变容器大小</h3><blockquote>
+<ul>
+<li><strong>c.resize(n)</strong>:调整c的大小为n个元素。若n&lt;c.size()，则多出的元素被丢弃；若必须添加新元素，对新元素进行值初始化</li>
+<li><strong>c.resize(n,t)</strong>:调整c的大小为n个元素，任何新添加的元素都初始化为值t</li>
+</ul>
+</blockquote>
+<pre><code class="c++">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;deque&gt;
+using namespace std;
+
+int main()
+{
+    vector&lt;int&gt; v{22,33,3};
+    cout&lt;&lt;&quot;v capacity:&quot;&lt;&lt;v.capacity()&lt;&lt;endl;
+    v.resize(6,1);
+    cout&lt;&lt;&quot;v size:&quot;&lt;&lt;v.size()&lt;&lt;endl;
+    cout&lt;&lt;&quot;v capacity:&quot;&lt;&lt;v.capacity()&lt;&lt;endl; 
+    for(auto i:v)
+        cout&lt;&lt;i&lt;&lt;&quot; &quot;;
+    /*
+    - 使用reserve操作通知容器应该为我们预留多少空间
+    - resize成员函数只改变容器中成员函数的数目，不改变容器的容量
+    - 容器的size操作指的是它已经保存的元素的数目
+    - capacity则是在不不分配新的内存空间的前提下知道它最多可以保存多少个元素 
+    */
+    v.reserve(100);
+    cout&lt;&lt;endl&lt;&lt;&quot;v capacity:&quot;&lt;&lt;v.capacity()&lt;&lt;endl;
+    cout&lt;&lt;&quot;v size:&quot;&lt;&lt;v.size()&lt;&lt;endl;    
+
+    return 0; 
+}</code></pre>
+<p><img src="https://i.imgur.com/foIu4wG.png" alt=""></p>
+
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://yeshan333.github.io" rel="external nofollow noreferrer">ShanSan</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://yeshan333.github.io/2018/12/01/%E6%A0%87%E5%87%86%E5%BA%93%E5%AE%B9%E5%99%A8/">http://yeshan333.github.io/2018/12/01/%E6%A0%87%E5%87%86%E5%BA%93%E5%AE%B9%E5%99%A8/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="http://yeshan333.github.io" target="_blank">ShanSan</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/CPP/">
+                                    <span class="chip bg-color">CPP</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2018/12/03/biu%E4%B8%80%E4%B8%8BGDB/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Biu一下GDB">
+                        
+                        <span class="card-title">Biu一下GDB</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            gcc常见编译选项
+** -c **:只激活预处理、编译和汇编，也就是生成obj文件
+** -S **:只激活处理和编译，把文件编译成汇编代码
+** -o **:定制目标名称，缺省的时候编译出来的可执行程序名为a.exe(windows)或
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2018-12-03
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/CPP/" class="post-category">
+                                    CPP
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/GDB/">
+                        <span class="chip bg-color">GDB</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2018/11/27/Keep-on-moving-%EF%BC%81/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Keep on moving ！">
+                        
+                        <span class="card-title">Keep on moving ！</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+
+
+比赛终于完了！又可以安心打代码看书了emmmmmmm
+
+
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2018-11-27
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            ShanSan
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E9%9A%8F%E7%AC%94/">
+                        <span class="chip bg-color">随笔</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: Shan San<br />'
+            + '文章作者: ShanSan<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+    
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2019</span>
+            <a href="http://yeshan333.github.io" target="_blank">ShanSan</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/yeshan333" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1329441308@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1329441308" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1329441308" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

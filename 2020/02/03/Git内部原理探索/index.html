@@ -1,0 +1,1375 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN,en,zh-HK,zh-TW,default">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="洞悉技术的本质-Git内部原理探索, Shan San">
+    <meta name="description" content="前言洞悉技术的本质，可以让我们在层出不穷的框架面前仍能泰然处之。用了那么久的 Git，不懂点内部原理，那可不行！懂点原理可以让我们遇到问题的时候能够更好更快的理清解决问题的思路。
+要真正读懂本文可能需要以下基础：
+
+有 Git 使用经验
+对">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>洞悉技术的本质-Git内部原理探索 | Shan San</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <script src="/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Shan San</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Shan San</div>
+        <div class="logo-desc">
+            
+            每天都要开开心心
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/yeshan333" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/yeshan333" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">洞悉技术的本质-Git内部原理探索</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Git/">
+                                <span class="chip bg-color">Git</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Git/" class="post-category">
+                                Git
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-02-03
+                </div>
+                
+
+                
+
+                
+
+                
+				
+                
+            </div>
+            
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>洞悉技术的本质，可以让我们在层出不穷的框架面前仍能泰然处之。用了那么久的 Git，不懂点内部原理，那可不行！懂点原理可以让我们遇到问题的时候能够更好更快的理清解决问题的思路。</p>
+<p>要真正读懂本文可能需要以下基础：</p>
+<ul>
+<li>有 Git 使用经验</li>
+<li>对 Git 的三个分区有所了解</li>
+<li>熟悉常用的 Linux 命令</li>
+<li>对经典哈希算法有一定的了解，比如<a href="https://zh.wikipedia.org/zh/SHA-1" target="_blank" rel="noopener">SHA-1</a>、SHA-256、MD5等</li>
+</ul>
+<p>在开始之前，让我们先抛出几个问题，然后一一解决、回答它们</p>
+<ul>
+<li>.git版本库里的文件/目录是干什么的?</li>
+<li>Git是如何存储文件信息的？</li>
+<li>当我们执行git add、git commit时，Git背后做了什么？</li>
+<li>Git分支的本质是什么?</li>
+</ul>
+<a id="more"></a>
+
+<h1 id="Git分区"><a href="#Git分区" class="headerlink" title="Git分区"></a>Git分区</h1><p>在真正开始之前，让我们先回顾下Git的三个分区（Workspace、Index / Stage、git repository）</p>
+<ul>
+<li>工作区（Workspace）：此处进行代码文件的编辑</li>
+<li>索引或称暂存区（Index / Stage）：存储文件状态信息，进行commit前会对此时的文件状态作快照（Snapshot）</li>
+<li>Git版本库（git repository）：由Git Object持久记录每一次commit的快照和链式结构的commit变更历史</li>
+</ul>
+<p>先看下从《Got Git》和网络上搬来的Git分区工作原理图和待remote的工作流再次感性回顾下之前使用Git自己时怎么操作的</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ssmath/mypic/img/20200202210748.png" alt="工作区、版本库、暂存区工作原理图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ssmath/mypic/img/20200202210624.png" alt="带Remote的工作流"></p>
+<p>相信看了这些，会对Git有新的认知，让我们正式开始🎉！</p>
+<h1 id="git版本库里的文件-目录是干什么的"><a href="#git版本库里的文件-目录是干什么的" class="headerlink" title=".git版本库里的文件/目录是干什么的"></a>.git版本库里的文件/目录是干什么的</h1><p>让我们通过一个从GitHub clone下来的一个实际项目的版本库来看下这些文件/目录，<a href="https://github.com/yeshan333/Explore-Git" target="_blank" rel="noopener">clone下来的repository</a></p>
+<pre><code class="bash">$ git clone https://github.com/yeshan333/Explore-Git
+
+$ ls -F1
+config
+description
+HEAD
+hooks/
+index
+info/
+logs/
+objects/
+packed-refs
+refs/</code></pre>
+<p><strong>挑几个重要文件/目录的做下解释</strong></p>
+<ul>
+<li>HEAD文件：用于存放当前所在分支的引用，这个引用是个符号引用（symbolic reference）</li>
+<li>index文件：二进制文件，它就是暂存区（Stage Area）。它是一个目录树，记录了文件的时间戳、文件长度、SHA-1等</li>
+<li>refs目录：基本所有的引用（references）文件都存放在这里，引用文件中的内容为SHA-1值，一般是commit object的SHA-1值</li>
+<li>objects目录：用于存放数据的所有 Git Object均存放在这个目录下，每个 Git Object 对应一个目录，object对应的SHA-1值的前 2 位为目录名，后 38 位为文件名</li>
+</ul>
+<p>抱着一些初步的认知，我们继续解决后面几个问题，加深对.git版本库内文件的理解</p>
+<h1 id="Git是如何存储文件信息的"><a href="#Git是如何存储文件信息的" class="headerlink" title="Git是如何存储文件信息的"></a>Git是如何存储文件信息的</h1><p>要知道Git如何存储信息，我们需要了解一下常见的Git对象，Git就是通过这些对象存储文件信息的。Git Object是Git存储文件信息的最小单元，如下为几种常见的Git Object以及它们的作用，它们一般是不可变的（immutable），这些对象使用40位的SHA-1值进行标识。</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Binary_large_object" target="_blank" rel="noopener">blob</a>：用于存储文件内容，Git保存文件的时候不会保存文件名</li>
+<li>tree object：当前目录结构的一个快照（Snapshot），它存储了一条或多条树记录（tree entries），每条记录含有一个指向数据对象（blob）或子树对象（子树木对象可理解为子目录）的SHA-1指针以及相应的文件模式、类型、文件名，用于表示内容之间的目录层次关系</li>
+<li>commit object：存储<strong>顶层tree object</strong>的SHA-1值、作者/提交者信息+时间戳以及提交注释，如果有父commit object，还会保存有这个commit object对应的SHA-1值。对于merge commit可能会有多个父commit object</li>
+<li>tag object：用于标记commit object。关于<a href="https://git-scm.com/book/en/v2/Git-Internals-Git-References" target="_blank" rel="noopener">tag object</a></li>
+</ul>
+<p>让我们通过一个实际的版本库了解下这些对象，使用<a href="https://git-scm.com/docs/git-log#Documentation/git-log.txt---prettyltformatgt" target="_blank" rel="noopener"><code>git log</code></a>查看这个版本库详尽的历史提交记录</p>
+<pre><code class="bash">$ git log --pretty=raw
+commit ee8a0dbc0c6fe89e6ff39b16c77543e8e2c6475b
+tree fb12b3e52ce18ce281bfc2b11a5e4350c2d10358
+parent 7b94dcbe89c9534913854284b4af727a9a5dfc84
+author yeshan333 &lt;1329441308@qq.com&gt; 1580629391 +0800
+committer yeshan333 &lt;1329441308@qq.com&gt; 1580629391 +0800
+
+    final commit
+
+commit 7b94dcbe89c9534913854284b4af727a9a5dfc84
+tree 8feb4afbab18e8d386413224a9e74f871c15a5ca
+author yeshan333 &lt;1329441308@qq.com&gt; 1580629170 +0800
+committer GitHub &lt;noreply@github.com&gt; 1580629170 +0800
+
+    Initial commit
+</code></pre>
+<p><strong>Git提供了一把非常好用的瑞士军刀🔪给我们剖析这些对象，它是就是<code>cat-file</code>，通过<code>-t</code>参数可以查看object的类型，通过<code>-p</code>参数我们可以查看object存储的具体内容。查看信息时，我们需要使用到object对应的SHA-1值，可不必写完，从头开始的前几位不冲突即可。</strong><a href="https://git-scm.com/docs/git-cat-file" target="_blank" rel="noopener">git cat-file</a></p>
+<p>让我们通过它查看下SHA-1值<code>ee8a0dbc0c6fe89e6ff39b16c77543e8e2c6475b</code>对应的commit object的类型以及存放的内容。</p>
+<pre><code class="bash">$ git cat-file -t ee8a
+commit
+
+$ git cat-file -p ee8a
+tree fb12b3e52ce18ce281bfc2b11a5e4350c2d10358
+parent 7b94dcbe89c9534913854284b4af727a9a5dfc84
+author yeshan333 &lt;1329441308@qq.com&gt; 1580629391 +0800
+committer yeshan333 &lt;1329441308@qq.com&gt; 1580629391 +0800
+
+final commit
+</code></pre>
+<p>让我们再查看下这个commit object（ee8a）存储的tree object（fb12）的信息</p>
+<pre><code class="bash">$ git cat-file -p fb12
+100644 blob 6116a7dd8f752dabff8730a46b46846b2d0a696b    README.md
+040000 tree 41ed97c2adb97658107069582b6a27e474b4cc64    test
+
+$ git cat-file -t fb12
+tree
+</code></pre>
+<p>我们知道tree object存储了一条或多条树记录（tree entries），每条记录含有一个指向数据对象（blob）或子树对象（子树木对象可理解为子目录）的SHA-1指针以及相应的文件模式、类型、文件名。100644即为对应的文件模式，100644表示普通文本文件，040000表示目录文件。<a href="https://cloud.tencent.com/developer/ask/82974/answers/created" target="_blank" rel="noopener">关于文件模式的一点疑问</a></p>
+<p>让我们再看下tree object（fb12）存储的SHA-1指针（6116）对应的blob（6116）存放的内容</p>
+<pre><code class="bash">$ git cat-file -p 6116
+# Explore-Git
+$ git cat-file -t 6116
+blob
+</code></pre>
+<p>Nice，很好的对应了之前对blob、tree object、commit object的描述。关于文件的大部分信息都存放在这些object中。</p>
+<h1 id="当我们执行git-add、git-commit时，Git背后做了什么"><a href="#当我们执行git-add、git-commit时，Git背后做了什么" class="headerlink" title="当我们执行git add、git commit时，Git背后做了什么"></a>当我们执行git add、git commit时，Git背后做了什么</h1><p>解答这个问题，我们需要通过实践去一步步感受Git背后的操作。我们创建一个简单的例子感受下，我们需要时刻关注.git/objects这个目录</p>
+<pre><code class="bash">$ mkdir demo
+$ cd demo
+$ git init # 初始化Git仓库
+$ find .git/objects -type f # 没有文件
+$ echo &quot;test&quot; &gt; test.txt
+$ mkdir hi
+$ cd hi
+$ echo &quot;Hello&quot; &gt; hello.txt
+$ cd ..
+$ find .git/objects -type f
+$ # 什么都没有</code></pre>
+<p>这里我们创建先了两个文件，test.txt、hello.txt，其中hello.txt文件放到了hi目录中，然后我们查看了.git/objects目录，没有文件。接下来就是重头戏了，我们要将当前目录的文件/目录（Linux一切皆文件）添加到暂存区（stage/index）。</p>
+<pre><code class="bash">$ git add .
+$ find .git/objects -type f
+.git/objects/9d/aeafb9864cf43055ae93beb0afd6c7d144bfa4
+.git/objects/e9/65047ad7c57865823c7d992b1d046ea66edf78</code></pre>
+<p>我们可以看到，执行了<code>git add</code>之后生成了两个文件，让我们通过<code>git cat-file</code>看看这两个文件</p>
+<pre><code class="bash">$ git cat-file -t 9dae
+blob
+$ git cat-file -p 9dae
+test # test.txt文件中的内容
+$ git cat-file -t e965
+blob
+$ git cat-file -p e965
+Hello # hi/hello.txt文件中的内容</code></pre>
+<p>哦，Git为我们生成了两个object，两个blob，存放的是test.txt、hello.txt的内容，让我们commit一下看看Git又做了什么</p>
+<pre><code class="bash">$ find .git/objects -type f
+.git/objects/27/1c49aa4a2c8eb1b2ef503c19378aa6810fca1e
+.git/objects/2e/8ebea76975c98806e73c0b7aea6c40c58d427c
+.git/objects/8c/3c7fbcd903744b20fd7567a1fcefa99133b5bc
+.git/objects/9d/aeafb9864cf43055ae93beb0afd6c7d144bfa4
+.git/objects/e9/65047ad7c57865823c7d992b1d046ea66edf78
+$ git cat-file -t 271c
+commit
+$ git cat-file -t 2e8e
+tree
+$ git cat-file -t 8c3c
+tree
+$
+$ git cat-file -p 271c
+tree 2e8ebea76975c98806e73c0b7aea6c40c58d427c
+author root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt; 1580651827 +0800
+committer root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt; 1580651827 +0800
+
+Hello Git
+$ git cat-file -p 8c3c
+100644 blob e965047ad7c57865823c7d992b1d046ea66edf78    hello.txt
+$ git cat-file -p 2e8e
+040000 tree 8c3c7fbcd903744b20fd7567a1fcefa99133b5bc    hi
+100644 blob 9daeafb9864cf43055ae93beb0afd6c7d144bfa4    test.txt</code></pre>
+<p>哦，commit后Git为我们新创建了3个object，分别是根树对象tree object（2e8e）、子树对象tree object（8c3c）、commit object（271c）。现在一共有5个Git Object。这些object存放的内容符合我们在解答<strong>Git是如何存储文件信息的</strong>时对它们的表述。Git在add、commit后有条不紊的把它们组织了起来。tql👍</p>
+<p>让我们看下此次提交的日志</p>
+<pre><code class="bash">$ git log --pretty=raw
+commit 271c49aa4a2c8eb1b2ef503c19378aa6810fca1e
+tree 2e8ebea76975c98806e73c0b7aea6c40c58d427c
+author root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt; 1580651827 +0800
+committer root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt; 1580651827 +0800
+
+    Hello Git</code></pre>
+<p>问题来了，Git是如何组织这些object的❓令人兴奋的是Git在提供给我们这些顶层API去愉快使用的同时还提供了一些较为底层的API让我们能够更深入的了解它。接下来我们将通过部分底层的API来重现本次commit log的创建过程。主要用到的底层API如下：</p>
+<ul>
+<li><a href="https://git-scm.com/docs/git-hash-object#Documentation/git-hash-object.txt--w" target="_blank" rel="noopener">git hash-object</a>：生成blob</li>
+<li><a href="https://git-scm.com/docs/git-update-index" target="_blank" rel="noopener">git update-index</a>：对暂存区进行操作</li>
+<li><a href="https://git-scm.com/docs/git-write-tree" target="_blank" rel="noopener">git write-tree</a>：根据当前暂存区（index）状态创建一个tree object</li>
+<li><a href="https://git-scm.com/docs/git-read-tree" target="_blank" rel="noopener">git read-tree</a>：将tree object读入暂存区</li>
+<li><a href="https://git-scm.com/docs/git-commit-tree#_synopsis" target="_blank" rel="noopener">git commit-tree</a>：创建commit object</li>
+</ul>
+<p><strong>重现步骤如下：</strong></p>
+<p>1、先初始化版本库，再为内容分别为<code>test</code>的test.txt、<code>Hello</code>的hello.txt创建两个blob，blob不存储文件名</p>
+<pre><code class="bash">$ mkdir test
+$ cd test
+git init
+$ echo &#39;test&#39; | git hash-object -w --stdin
+9daeafb9864cf43055ae93beb0afd6c7d144bfa4
+$ echo &#39;Hello&#39; | git hash-object -w --stdin
+e965047ad7c57865823c7d992b1d046ea66edf78</code></pre>
+<p>2、使用<code>git update-index -add</code>将blob（e965）加入暂存区，使用<code>--cacheinfo</code>参数指定文件模式、SHA-1值、文件名（hello.txt）</p>
+<pre><code class="bash">$  git update-index --add --cacheinfo 100644 e965047ad7c57865823c7d992b1d046ea66edf78 hello.txt</code></pre>
+<p>3、使用<code>git write-tree</code>将当前暂存区状态写入一个tree object（8c3c）</p>
+<pre><code class="bash">$ git write-tree
+8c3c7fbcd903744b20fd7567a1fcefa99133b5bc</code></pre>
+<p>4、将hello.txt移出暂存区，将blob（9dae）加入暂存区（即将test.txt加入暂存区）</p>
+<pre><code class="bash">$ git update-index --remove hello.txt
+$ git update-index --add --cacheinfo 100644 9daeafb9864cf43055ae93beb0afd6c7d144bfa4 test.txt</code></pre>
+<p>5、使用<code>git read-tree</code>将已有tree object作为<strong>子树对象</strong>加入暂存区，通过<code>--prefix</code>设置名称为hi</p>
+<pre><code class="bash">$ git read-tree --prefix=hi 8c3c7fbcd903744b20fd7567a1fcefa99133b5bc</code></pre>
+<p>6、记录下当前暂存区状态到tree object</p>
+<pre><code class="bash">$ git write-tree
+2e8ebea76975c98806e73c0b7aea6c40c58d427c</code></pre>
+<p>7、使用<code>git commit-tree</code>根据tree object的SHA-1值创建commit object</p>
+<pre><code class="bash">$ echo &#39;Hello Git&#39; | git commit-tree 2e8e
+2616a5b40ead79df23736f61b346080423f438fe</code></pre>
+<p>8、查看commit log，没多大毛病，收工🎉</p>
+<pre><code class="bash">$ git log --pretty=raw 2616
+commit 2616a5b40ead79df23736f61b346080423f438fe
+tree 2e8ebea76975c98806e73c0b7aea6c40c58d427c
+author root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt; 1580660050 +0800
+committer root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt; 1580660050 +0800
+
+    Hello Git
+
+$ git cat-file -p 2616
+tree 2e8ebea76975c98806e73c0b7aea6c40c58d427c
+author root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt; 1580660050 +0800
+committer root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt; 1580660050 +0800
+
+Hello Git
+</code></pre>
+<p>相信到了这里，已经对Git在我们<code>git add</code>、<code>git commit</code>时做了什么有了一定的了解。如果想了解Git Object对应的SHA-1值如何生成和如何复现并串联多个commit object形成一个提交历史链，可查看《Pro Git》的第十章第二小节或参看后面的参考资料。</p>
+<h1 id="Git分支的本质是什么"><a href="#Git分支的本质是什么" class="headerlink" title="Git分支的本质是什么"></a>Git分支的本质是什么</h1><p><strong>Git分支的本质是指向某一系列提交之首的指针或引用。</strong>Git使用引用的一个好处就是我们不需要花心思去记那些Git Object长长的SHA-1值。引用是存放SHA-1值的文件，它们位于<code>.git/refs</code>目录中。Git提供了一个API让我们更新引用-<code>update-ref</code>，示例如下</p>
+<pre><code class="bash">$ git update-ref refs/heads/master 2616 # 2616为之前浮现commit log创建的commit object的SHA-1值
+$ git log
+commit 2616a5b40ead79df23736f61b346080423f438fe (HEAD -&gt; master)
+Author: root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt;
+Date:   Mon Feb 3 00:14:10 2020 +0800
+
+    Hello Git
+$ git log master
+commit 2616a5b40ead79df23736f61b346080423f438fe (HEAD -&gt; master)
+Author: root &lt;root@DESKTOP-CQ9JEC7.localdomain&gt;
+Date:   Mon Feb 3 00:14:10 2020 +0800
+
+    Hello Git
+$ cat .git/refs/heads/master
+2616a5b40ead79df23736f61b346080423f438fe</code></pre>
+<h2 id="HEAD引用"><a href="#HEAD引用" class="headerlink" title="HEAD引用"></a>HEAD引用</h2><p>在介绍HEAD文件的时候我们说过它存放的是当前所在分支的引用，而且这个引用是个<strong>符号引用</strong>（symbolic reference）。那么什么是符号引用？<strong>它是一个指向其它引用的指针</strong>。我们可以查看之前clone下来的<a href="https://github.com/yeshan333/Explore-Git" target="_blank" rel="noopener">Explore-Git</a>的HEAD文件</p>
+<pre><code class="bash">$ cat .git/HEAD
+ref: refs/heads/master</code></pre>
+<p>当我们checkout到某个分支时，HEAD文件内容如下</p>
+<pre><code class="bash">$ git branch yeshan
+$ git checkout yeshan
+Switched to branch &#39;yeshan&#39;
+
+$ cat .git/HEAD
+ref: refs/heads/yeshan</code></pre>
+<p>至此，抛出的问题已解答完毕。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><p><a href="https://developer.aliyun.com/article/720615?spm=a2c6h.12873639.0.0.176712eeP7J5d0&tdsourcetag=s_pctim_aiomsg" target="_blank" rel="noopener">Go Git：面向未来的代码平台</a>，了解版本控制系统的发展和Git现存的问题，版本控制系统未来的走向</p>
+</li>
+<li><p><a href="https://github.com/gotgit/gotgit" target="_blank" rel="noopener">《Git权威指南》</a> - <a href="http://www.worldhello.net/gotgit/02-git-solo/030-head-master-commit-refs.html" target="_blank" rel="noopener">Git对象探秘</a></p>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/UQKrAR3zsdTRz8nFiLk2uQ" target="_blank" rel="noopener">这才是真正的Git——Git内部原理揭秘！</a></p>
+</li>
+<li><p><a href="https://git-scm.com/book/en/v2/Appendix-C%3A-Git-Commands-Basic-Snapshotting" target="_blank" rel="noopener">《Pro Git》- Basic Snapshotting</a></p>
+</li>
+<li><p><a href="http://gitbook.liuhui998.com/1_2.html" target="_blank" rel="noopener">Git对象模型</a></p>
+</li>
+<li><p><a href="https://github.com/tank0317/git-learning/issues/5" target="_blank" rel="noopener">你知道 Git 是如何做版本控制的吗</a></p>
+</li>
+<li><p><a href="https://marklodato.github.io/visual-git-guide/index-zh-cn.html#rebase" target="_blank" rel="noopener">图解Git</a></p>
+</li>
+<li><p><a href="https://developer.github.com/v3/git/blobs/" target="_blank" rel="noopener">GitHub Developer REST API Git Blobs</a></p>
+</li>
+<li><p><a href="https://cloud.tencent.com/developer/ask/82974/answers/created" target="_blank" rel="noopener">如何读取git-ls-tree输出的模式字段</a></p>
+</li>
+<li><p><a href="https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html" target="_blank" rel="noopener">常用Git命令清单</a></p>
+</li>
+</ul>
+
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://yeshan333.github.io" rel="external nofollow noreferrer">ShanSan</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://yeshan333.github.io/2020/02/03/Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2/">http://yeshan333.github.io/2020/02/03/Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="http://yeshan333.github.io" target="_blank">ShanSan</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Git/">
+                                    <span class="chip bg-color">Git</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2020/02/03/Git%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="洞悉技术的本质-Git内部原理探索">
+                        
+                        <span class="card-title">洞悉技术的本质-Git内部原理探索</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            前言洞悉技术的本质，可以让我们在层出不穷的框架面前仍能泰然处之。用了那么久的 Git，不懂点内部原理，那可不行！懂点原理可以让我们遇到问题的时候能够更好更快的理清解决问题的思路。
+要真正读懂本文可能需要以下基础：
+
+有 Git 使用经验
+对
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Git/" class="post-category">
+                                    Git
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Git/">
+                        <span class="chip bg-color">Git</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/01/13/React-Flask%E6%89%93%E9%80%A0%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="React+Flask打造前后端分离项目开发环境">
+                        
+                        <span class="card-title">React+Flask打造前后端分离项目开发环境</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            前言
+新的一年，开始水第一篇技术文。碰巧最近React玩得多，撸一篇文章纪念一下开发环境的搭建。🤔
+
+
+开篇两问：
+什么是React？：React，用于构建用户界面的 JavaScript 库（官网复制粘贴，真香，不用怎么写templat
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-13
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/React/" class="post-category">
+                                    React
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Flask/">
+                        <span class="chip bg-color">Flask</span>
+                    </a>
+                    
+                    <a href="/tags/React/">
+                        <span class="chip bg-color">React</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: Shan San<br />'
+            + '文章作者: ShanSan<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+    
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2019</span>
+            <a href="http://yeshan333.github.io" target="_blank">ShanSan</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/yeshan333" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1329441308@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1329441308" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1329441308" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
